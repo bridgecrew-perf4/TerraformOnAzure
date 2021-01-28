@@ -1,0 +1,40 @@
+# -----------------------------------------------------------------------------
+# VARAIBLE_NAMING_CONVENTION
+#   sig = shared image gallery
+#   rg = resource group
+#   dest = destination
+#   sa = storage account
+#   ci = continous integration
+
+# General Variables ---
+
+# .VARIABLE agent_pool
+#   This is the name of the agent pool. This agent pool should be a self-hosted agent
+#   in the DevOps Services
+
+# Image Builder Variables ----
+
+# .Variable image_builder
+#   set this to true if you are planning to use Image Builder as part of this jumpstart kit, false otherwise.
+# .VARIABLE artifact_name
+#   The name of the artifact published by the image builder pipeline
+
+# -----------------------------------------------------------------------------
+variables:
+
+# general variables
+  - name: agent_pool
+    value: 22805-agentpool # <--- CHANGE TO YOUR ADO AGENT POOL NAME
+    
+  - name: motsId
+    value: "22805"
+
+# image builder variables ---------------------------------------------------
+  - name: image_builder
+    value: false # <--- OPTIONAL, SET TO ENABLE/DISABLE IMAGE BUILDER TASKS
+
+
+
+
+   
+

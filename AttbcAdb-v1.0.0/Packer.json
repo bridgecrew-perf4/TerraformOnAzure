@@ -1,0 +1,106 @@
+{
+    "variables": {
+  
+      "client_id": "",
+      "client_secret": "",
+      "tenant_id": "",
+      "subscription_id": "",
+  
+      "base_sig_subid": "b1af8825-0fde-44a1-9ebf-63d5bd0410e4",
+      "base_sig_rg": "att-golden-images",
+      "base_sig": "ATT_Shared_Images",
+      "base_sig_definition": "RHEL-7",
+      "base_sig_version": "1.2956.20200414",
+  
+      "dest_sig_rg": "22805-westus2-poc-rg",
+      "dest_sig": "22805pocsig",
+      "dest_sig_definition": "AttbcAdb",
+      "dest_sig_version": "3.0.0",
+      "location": "East US",
+      
+      "zip_path": "../AttbcAdb.zip",
+  
+      "virtual_network_resource_group_name": "attbc-westus2-poc-rg-01",
+      "virtual_network_name": "westus2-22805-poc-vnet",
+      "virtual_network_subnet_name": "westus2-22805-poc-vnet-jump-snet-01",
+      "managed_image_resource_group_name": "vptower-shared-rg",
+  
+      "os_type": "Linux",
+      "vm_size": "Standard_DS2_v2"
+    },
+    "sensitive-variables": ["client_id", "client_secret"],
+    "builders": [
+    {
+      "type": "azure-arm",
+  
+      "client_id": "{{user `client_id`}}",
+      "client_secret": "{{user `client_secret`}}",
+      "tenant_id": "{{user `tenant_id`}}",
+      "subscription_id": "{{user `subscription_id`}}",
+  
+      "shared_image_gallery": {
+        "subscription": "{{user `base_sig_subid`}}",
+        "resource_group": "{{user `base_sig_rg`}}",
+        "gallery_name": "{{user `base_sig`}}",
+        "image_name": "{{user `base_sig_definition`}}",
+        "image_version": "{{user `base_sig_version`}}"
+      },
+  
+      "shared_image_gallery_destination": {
+        "resource_group": "{{user `dest_sig_rg`}}",
+        "gallery_name": "{{user `dest_sig`}}",
+        "image_name": "{{user `dest_sig_definition`}}",
+        "image_version": "{{user `dest_sig_version`}}",
+        "replication_regions": ["{{user `location`}}"]
+    },
+  
+    "virtual_network_resource_group_name": "{{user `virtual_network_resource_group_name`}}",
+    "virtual_network_name": "{{user `virtual_network_name`}}",
+    "virtual_network_subnet_name": "{{user `virtual_network_subnet_name`}}",
+  
+  
+    "managed_image_resource_group_name": "{{user `managed_image_resource_group_name`}}",
+    "managed_image_name": "{{user `dest_sig_definition`}}{{user `dest_sig_version`}}",
+  
+    "async_resourcegroup_delete": true,
+  
+      "os_type": "{{user `os_type`}}",
+      "location": "{{user `location`}}",
+      "vm_size": "{{user `vm_size`}}"
+  
+    }
+  ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{user `zip_path`}}",
+            "destination": "/tmp/AttbcAdb.zip"
+        },
+      {
+        "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+        "inline_shebang": "/bin/sh -x",
+        "type": "shell",
+        "inline": [
+          
+          "set -e",
+          "cd /tmp/",
+          "az login --service-principal -u {{user `client_id`}} -p {{user `client_secret`}} -t {{user `tenant_id`}}",
+          "az account set --subscription {{user `subscription_id`}}",
+              
+          "mkdir -p /opt/app/workload; cd /opt/app/workload",
+          "az storage copy -s https://22805pocstdgatt001.blob.core.windows.net/attbc-tars/sample_new/opt.tar -d opt.tar",
+          "az storage copy -s https://22805pocstdgatt001.blob.core.windows.net/attbc-tars/bc-prod-web1.golden.tar -d bc-prod-web1.golden.tar",
+          "tar -xvf opt.tar",
+          "tar -xvf bc-prod-web1.golden.tar",
+                          
+          "sudo groupadd enabler",
+          "sudo useradd -g enabler enabler",
+          "sudo chown -hR enabler:enabler /opt/app/workload",
+          "sudo ln -s /opt/app/workload /sites",
+                
+  
+          "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+        ]
+      }
+    ]
+  }
