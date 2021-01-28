@@ -42,13 +42,13 @@ variables:
     value: true
 
 
-resources:
-  repositories:
-    - repository: common-library
-      type: git
-      name: ATT Cloud/common-library
-      ref: refs/tags/v0.5.3
-      endpoint: ATTDevops_Service_Connection_ATTBC
+# resources:
+#   repositories:
+#     - repository: common-library
+#       type: git
+#       name: ATT Cloud/common-library
+#       ref: refs/tags/v0.5.3
+#       endpoint: ATTDevops_Service_Connection_ATTBC
 
 #comment out line 53-59 if not planning to use image builder resource
   # pipelines:
