@@ -15,7 +15,7 @@
 # .NOTES
 #     File Name      : Pipeline.yaml
 #     Prerequisite   : ADO Multi-Stage Yaml Pipeline
-
+#
 # -----------------------------------------------------------------------------
 
 name: jumpstart-vm-$(version).$(Rev:rr)
