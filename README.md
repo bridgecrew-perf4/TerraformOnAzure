@@ -1,12 +1,5 @@
 [[_TOC_]]
 
-# Introduction  
-
-Current version of the VM Jumpstart Kit is v0.5.0 compatible with common-library v0.5.0
-
-This repository is one in a series of [JumpStart Kits](https://dev.azure.com/ATTDevOps/ATT%20Cloud/_wiki/wikis/DevOps%20Automation/437/JumpStart-Kits). This kit will highlight a particular combination of patterns at the [Compute and Persistence layer](https://dev.azure.com/ATTDevOps/ATT%20Cloud/_wiki/wikis/DevOps%20Automation/437/JumpStart-Kits?anchor=purpose). The Compute layer of this kit will use [Azure Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/overview) (VM) for the middle tier. The frontend tier will also use VM, but can be swapped using a different Azure Service like Azure IaaS VMs. The Persistence Layer of this kit will use Azure PaaS DB for the backend database tier.
-
-> Note: Please ensure you read through the major [JumpStart Kits](https://dev.azure.com/ATTDevOps/ATT%20Cloud/_wiki/wikis/DevOps%20Automation/437/JumpStart-Kits) documentation before continuing with this doc.
 
 # Example Use Case
 
